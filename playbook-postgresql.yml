@@ -1,0 +1,47 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required Python libraries
+      apt:
+        name: ["python3-psycopg2", "python3-pip"]
+        state: present
+
+    - name: Install PostgreSQL
+      apt:
+        name: ["postgresql", "postgresql-contrib"]
+        state: present
+
+    - name: Allow password authentication for all connections
+      lineinfile:
+        path: /etc/postgresql/10/main/pg_hba.conf
+        regexp: "^host    all             all             127.0.0.1/32            peer$"
+        line: "host    all             all             127.0.0.1/32            md5"
+        state: present
+
+    - name: Allow external connections to PostgreSQL
+      lineinfile:
+        path: /etc/postgresql/10/main/postgresql.conf
+        regexp: "^#listen_addresses = 'localhost'"
+        line: "listen_addresses = '*'"
+        state: present
+
+    - name: Restart PostgreSQL to apply changes
+      service:
+        name: postgresql
+        state: restarted
+
+    - name: Create the admin user and database
+      shell: |
+        sudo -u postgres psql -c "CREATE USER admin WITH PASSWORD 'postgres';"
+        sudo -u postgres psql -c "CREATE DATABASE tcc OWNER admin;"
+        sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tcc TO admin;"
+
+    - name: Ensure PostgreSQL is enabled to start on boot
+      service:
+        name: postgresql
+        enabled: yes

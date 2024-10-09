@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install MongoDB
+      apt:
+        name: mongodb
+        state: present
+
+    - name: Start and enable MongoDB service
+      service:
+        name: mongodb
+        state: started
+        enabled: yes
+
+    - name: Allow external connections to MongoDB
+      lineinfile:
+        path: /etc/mongodb.conf
+        regexp: "^bindIp: 127.0.0.1"
+        line: "bindIp: 0.0.0.0"
+        state: present
+
+    - name: Restart MongoDB
+      service:
+        name: mongodb
+        state: restarted
