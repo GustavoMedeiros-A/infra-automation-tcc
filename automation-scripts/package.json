@@ -1,0 +1,27 @@
+{
+  "name": "automation-script",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "console": "npx ts-node src/index.ts",
+    "createTable": "npx ts-node src/postgres/createTables.ts",
+    "createCollection": "npx ts-node src/mongo/createCollection.ts",
+    "insertDataPostgres": "npx ts-node src/postgres/insertData"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/node": "^22.7.5",
+    "mongodb": "^6.9.0",
+    "pg": "^8.13.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^4.0.6",
+    "@types/pg": "^8.11.10"
+  }
+}

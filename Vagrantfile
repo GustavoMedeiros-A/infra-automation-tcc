@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
         vb.cpus = 2
       end
       postgresql.vm.provision "ansible" do |ansible|
-        ansible.playbook = "playbook-postgresql.yml"
+        ansible.playbook = "playbooks/playbook-postgresql.yml"
         ansible.limit = "all"
       end
     end
@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
         vb.cpus = 2
       end
       mongodb.vm.provision "ansible" do |ansible|
-        ansible.playbook = "playbook-mongodb.yml"
+        ansible.playbook = "playbooks/playbook-mongodb.yml"
         ansible.limit = "all"
       end
     end

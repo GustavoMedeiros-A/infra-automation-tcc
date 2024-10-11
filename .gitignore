@@ -1,2 +1,4 @@
 .vagrant/
 ubuntu-bionic*.log
+
+node_modules/
