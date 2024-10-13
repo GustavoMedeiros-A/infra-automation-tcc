@@ -1,7 +1,4 @@
-import { MongoClient } from "mongodb";
-
-const url = "mongodb://admin:admin@localhost:27017";
-const client = new MongoClient(url);
+import { client } from "./mongoConnection";
 
 const dbName = "comparation";
 
@@ -28,8 +25,6 @@ const genericCreateCollection = async (collectionName: string) => {
 const createCollections = async () => {
   try {
     await client.connect();
-    console.log("Connected to MongoDB");
-
     await genericCreateCollection("small");
     await genericCreateCollection("medium");
     await genericCreateCollection("large");
