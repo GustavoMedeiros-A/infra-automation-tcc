@@ -1,5 +1,5 @@
 import { get2024RandomDate, getRandomQuantity } from "../utils";
-import { client } from "./connection";
+import { client } from "./postgresConnection";
 
 const generateData = async (recordCount: number, tableName: string) => {
   try {

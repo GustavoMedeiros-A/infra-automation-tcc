@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "console": "npx ts-node src/index.ts",
     "createTable": "npx ts-node src/postgres/createTables.ts",
-    "insertDataPostgres": "npx ts-node src/postgres/insertData",
+    "insertDataPostgres": "npx ts-node src/postgres/insertDataPostgres",
     "createCollection": "npx ts-node src/mongo/createCollection.ts",
     "insertDataMongo": "npx ts-node src/mongo/insertDataMongo"
   },

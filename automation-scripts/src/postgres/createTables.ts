@@ -1,4 +1,4 @@
-import { client } from "./connection";
+import { client } from "./postgresConnection";
 
 const genericCreateTable = async (tableName: string) => {
   try {

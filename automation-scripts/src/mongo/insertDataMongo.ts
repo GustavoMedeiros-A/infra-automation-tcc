@@ -15,13 +15,10 @@ const generateData = async (recordCount: number, collectionName: string) => {
 const clearCollections = async () => {
   await client.db().collection("small_products").deleteMany({});
   await client.db().collection("small_orders").deleteMany({});
-  await client.db().collection("small_order_items").deleteMany({});
   await client.db().collection("medium_products").deleteMany({});
   await client.db().collection("medium_orders").deleteMany({});
-  await client.db().collection("medium_order_items").deleteMany({});
   await client.db().collection("large_products").deleteMany({});
   await client.db().collection("large_orders").deleteMany({});
-  await client.db().collection("large_order_items").deleteMany({});
 };
 
 const generateProducts = async (
