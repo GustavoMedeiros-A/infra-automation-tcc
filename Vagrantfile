@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|
     config.vm.define "postgresql" do |postgresql|
-      postgresql.vm.box = "ubuntu/bionic64"
+      postgresql.vm.box = "ubuntu/focal64"
       postgresql.vm.network "private_network", type: "dhcp"
       postgresql.vm.network "forwarded_port", guest: 5432, host: 1234 
       postgresql.vm.hostname = "postgresql.vm"
@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.define "mongodb" do |mongodb|
-      mongodb.vm.box = "ubuntu/bionic64"
+      mongodb.vm.box = "ubuntu/focal64"
       mongodb.vm.network "private_network", type: "dhcp"
       mongodb.vm.network "forwarded_port", guest: 27017, host: 12345 
       mongodb.vm.hostname = "mongodb.vm"

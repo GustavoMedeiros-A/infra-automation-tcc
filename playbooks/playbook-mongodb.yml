@@ -1,30 +1,48 @@
----
 - hosts: all
   become: true
   tasks:
-    - name: Update apt cache
+    - name: Atualiza o cache do apt
       apt:
         update_cache: yes
 
-    - name: Install MongoDB
+    - name: Instala o Docker
       apt:
-        name: mongodb
+        name: docker.io
         state: present
 
-    - name: Start and enable MongoDB service
-      service:
-        name: mongodb
+    - name: Inicia e habilita o Docker
+      systemd:
+        name: docker
         state: started
-        enabled: yes
+        enabled: true
 
-    - name: Allow external connections to MongoDB
-      lineinfile:
-        path: /etc/mongodb.conf
-        regexp: "^bindIp: 127.0.0.1"
-        line: "bindIp: 0.0.0.0"
-        state: present
+    - name: Cria o diretório para dados persistentes do MongoDB
+      file:
+        path: /data/mongo
+        state: directory
+        owner: 1000 # UID padrão para o usuário no Docker Mongo
+        group: 1000
+        mode: "0755"
 
-    - name: Restart MongoDB
-      service:
+    - name: Executa o contêiner MongoDB
+      docker_container:
         name: mongodb
-        state: restarted
+        image: mongo:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "27017:27017"
+        volumes:
+          - /data/mongo:/data/db
+        env:
+          MONGO_INITDB_ROOT_USERNAME: "admin"
+          MONGO_INITDB_ROOT_PASSWORD: "password"
+      register: mongodb_container
+
+    - name: Adiciona o usuário ao grupo Docker para acesso sem sudo
+      user:
+        name: vagrant
+        groups: docker
+        append: yes
+
+- import_playbook: playbook-node-config.yml

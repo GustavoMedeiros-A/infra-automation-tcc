@@ -1,6 +1,6 @@
 import { client } from "./mongoConnection";
 
-const dbName = "comparation";
+const dbName = "tcc";
 
 const genericCreateCollection = async (collectionName: string) => {
   try {

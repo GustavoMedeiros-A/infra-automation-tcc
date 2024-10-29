@@ -1,9 +1,12 @@
 import { Client } from "pg";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const client = new Client({
-  user: "admin",
-  host: "localhost",
-  database: "comparation",
-  password: "admin",
-  port: 5433,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: parseInt(process.env.DB_PORT || "5432", 10),
 });
