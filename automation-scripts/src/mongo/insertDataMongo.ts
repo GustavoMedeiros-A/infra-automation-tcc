@@ -1,10 +1,15 @@
-import { get2024RandomDate, getRandomQuantity } from "../utils";
+import {
+  get2024RandomDate,
+  getRandomQuantity,
+  ORDER_COUNT,
+  PRODUTO_COUNT,
+} from "../utils";
 import { client } from "./mongoConnection";
 
-const generateData = async (recordCount: number, collectionName: string) => {
+const generateData = async () => {
   try {
-    const products = await generateProducts(recordCount, collectionName);
-    await generateOrders(products, recordCount, collectionName);
+    const products = await generateProducts();
+    await generateOrders(products);
 
     console.log("Data generated successfully");
   } catch (err) {
@@ -13,20 +18,14 @@ const generateData = async (recordCount: number, collectionName: string) => {
 };
 
 const clearCollections = async () => {
-  await client.db().collection("small_products").deleteMany({});
-  await client.db().collection("small_orders").deleteMany({});
-  await client.db().collection("medium_products").deleteMany({});
-  await client.db().collection("medium_orders").deleteMany({});
-  await client.db().collection("large_products").deleteMany({});
-  await client.db().collection("large_orders").deleteMany({});
+  await client.db().collection("products").deleteMany({});
+  await client.db().collection("orders").deleteMany({});
+  await client.db().collection("order_items").deleteMany({});
 };
 
-const generateProducts = async (
-  recordCount: number,
-  collectionName: string
-) => {
+const generateProducts = async () => {
   const products = [];
-  const productCount = Math.floor(recordCount * 0.1);
+  const productCount = PRODUTO_COUNT;
 
   for (let i = 0; i < productCount; i++) {
     const name = `Product ${i + 1}`;
@@ -34,7 +33,7 @@ const generateProducts = async (
 
     const result = await client
       .db()
-      .collection(`${collectionName}_products`)
+      .collection("products")
       .insertOne({ name, price });
 
     const productId = result.insertedId;
@@ -44,12 +43,10 @@ const generateProducts = async (
   return products;
 };
 
-const generateOrders = async (
-  products: any[],
-  recordCount: number,
-  collectionName: string
-) => {
-  for (let i = 0; i < recordCount; i++) {
+const generateOrders = async (products: any[]) => {
+  const orderCount = ORDER_COUNT;
+
+  for (let i = 0; i < orderCount; i++) {
     const clientName = `Client ${i + 1}`;
     const orderDate = get2024RandomDate();
     const items = [];
@@ -58,13 +55,14 @@ const generateOrders = async (
     for (let j = 0; j < itemCount; j++) {
       const product = products[Math.floor(Math.random() * products.length)];
       const quantity = getRandomQuantity();
-      items.push({ product, quantity });
+      items.push({ product_id: product.id, quantity });
     }
 
-    await client
-      .db()
-      .collection(`${collectionName}_orders`)
-      .insertOne({ client: clientName, date: orderDate, items });
+    await client.db().collection("orders").insertOne({
+      client: clientName,
+      date: orderDate,
+      items,
+    });
   }
 };
 
@@ -73,13 +71,12 @@ const insert = async () => {
     await client.connect();
     await clearCollections();
 
-    await generateData(1000, "small");
-    await generateData(2000, "medium");
-    await generateData(3000, "large");
+    await generateData(); // Gera a quantidade fixa de dados
   } catch (err) {
-    console.log("error", err);
+    console.log("Error connecting to MongoDB:", err);
   } finally {
     await client.close();
+    console.log("MongoDB connection closed.");
   }
 };
 

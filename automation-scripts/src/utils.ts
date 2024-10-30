@@ -9,3 +9,6 @@ export function get2024RandomDate(): Date {
     start.getTime() + Math.random() * (end.getTime() - start.getTime())
   );
 }
+
+export const ORDER_COUNT = 500;
+export const PRODUTO_COUNT = 100;

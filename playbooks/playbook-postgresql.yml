@@ -1,49 +1,43 @@
 ---
+- import_playbook: playbook-docker.yml
+
 - hosts: all
   become: true
   tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+    - name: Pull PostgreSQL Docker image
+      docker_image:
+        name: postgres
+        tag: "latest"
+        source: pull
 
-    - name: Install required Python libraries
-      apt:
-        name: ["python3-psycopg2", "python3-pip"]
-        state: present
+    - name: Cria o diretório para dados persistentes do Postgres
+      file:
+        path: /data/postgres
+        state: directory
+        owner: 100
+        group: 1000
+        mode: "0755"
 
-    - name: Install PostgreSQL
-      apt:
-        name: ["postgresql", "postgresql-contrib"]
-        state: present
+    - name: Run PostgreSQL container
+      docker_container:
+        name: postgres_container
+        image: postgres:latest
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tcc
+        ports:
+          - "5432:5432"
+        volumes:
+          - /var/lib/docker_volumes/postgres_data:/var/lib/postgresql/dat
+        state: started
+        restart_policy: always
 
-    - name: Allow password authentication for all connections
-      lineinfile:
-        path: /etc/postgresql/12/main/pg_hba.conf
-        regexp: "^host    all             all             127.0.0.1/32            peer$"
-        line: "host    all             all             0.0.0.0/0               md5"
-        state: present
-
-    - name: Allow external connections to PostgreSQL
-      lineinfile:
-        path: /etc/postgresql/12/main/postgresql.conf
-        regexp: "^#listen_addresses = 'localhost'"
-        line: "listen_addresses = '*'"
-        state: present
-
-    - name: Restart PostgreSQL to apply changes
-      service:
-        name: postgresql
-        state: restarted
-
-    - name: Create the admin user and database
-      shell: |
-        sudo -u postgres psql -c "CREATE USER admin WITH PASSWORD 'postgres';"
-        sudo -u postgres psql -c "CREATE DATABASE tcc OWNER admin;"
-        sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tcc TO admin;"
-
-    - name: Ensure PostgreSQL is enabled to start on boot
-      service:
-        name: postgresql
-        enabled: yes
+    - name: Wait for PostgreSQL to be ready
+      wait_for:
+        host: "localhost"
+        port: 5432
+        state: started
+        timeout: 60
 
 - import_playbook: playbook-node-config.yml

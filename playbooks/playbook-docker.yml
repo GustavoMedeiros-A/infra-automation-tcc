@@ -1,0 +1,46 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Atualiza o cache do apt
+      apt:
+        update_cache: yes
+
+    - name: Ensure pip3 is installed
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Instala o Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Adiciona o usuário ao grupo Docker
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: yes
+
+    - name: Adiciona o usuário ao grupo Docker para acesso sem sudo
+      user:
+        name: vagrant
+        groups: docker
+        append: yes
+
+    - name: Instala a biblioteca Docker para Python
+      pip:
+        name: docker
+        state: present
+
+    - name: Inicia e habilita o Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Reinicia o Docker para aplicar permissões de grupo
+      systemd:
+        name: docker
+        state: restarted
+        enabled: true

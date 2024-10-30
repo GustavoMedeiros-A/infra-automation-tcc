@@ -2,34 +2,22 @@ import { client } from "./mongoConnection";
 
 const dbName = "tcc";
 
-const genericCreateCollection = async (collectionName: string) => {
+const createCollections = async () => {
   try {
+    await client.connect();
     const db = client.db(dbName);
 
-    const productCollection = `${collectionName}_product`;
-    const orderCollection = `${collectionName}_order`;
-    const orderItemsCollection = `${collectionName}_order_items`;
+    const productCollection = "product";
+    const orderCollection = "order";
+    const orderItemsCollection = "order_items";
 
     await db.createCollection(productCollection);
     await db.createCollection(orderCollection);
     await db.createCollection(orderItemsCollection);
 
-    console.log(
-      `Collections for ${collectionName} created and sample data inserted.`
-    );
+    console.log("Collections created successfully.");
   } catch (e) {
-    console.error(`Error creating collections for ${collectionName}:`, e);
-  }
-};
-
-const createCollections = async () => {
-  try {
-    await client.connect();
-    await genericCreateCollection("small");
-    await genericCreateCollection("medium");
-    await genericCreateCollection("large");
-  } catch (err) {
-    console.log("Error connecting to MongoDB", err);
+    console.error("Error creating collections:", e);
   } finally {
     await client.close();
     console.log("MongoDB connection closed.");

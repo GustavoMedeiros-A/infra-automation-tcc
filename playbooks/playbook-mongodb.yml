@@ -1,26 +1,20 @@
+---
+- import_playbook: playbook-docker.yml
+
 - hosts: all
   become: true
   tasks:
-    - name: Atualiza o cache do apt
-      apt:
-        update_cache: yes
-
-    - name: Instala o Docker
-      apt:
-        name: docker.io
-        state: present
-
-    - name: Inicia e habilita o Docker
-      systemd:
-        name: docker
-        state: started
-        enabled: true
+    - name: Baixa a imagem Docker do MongoDB
+      docker_image:
+        name: mongo
+        tag: "latest"
+        source: pull
 
     - name: Cria o diretório para dados persistentes do MongoDB
       file:
         path: /data/mongo
         state: directory
-        owner: 1000 # UID padrão para o usuário no Docker Mongo
+        owner: 100
         group: 1000
         mode: "0755"
 
@@ -39,10 +33,11 @@
           MONGO_INITDB_ROOT_PASSWORD: "password"
       register: mongodb_container
 
-    - name: Adiciona o usuário ao grupo Docker para acesso sem sudo
-      user:
-        name: vagrant
-        groups: docker
-        append: yes
+    - name: Aguarda o MongoDB estar pronto
+      wait_for:
+        host: "localhost"
+        port: 27017
+        state: started
+        timeout: 60
 
 - import_playbook: playbook-node-config.yml
