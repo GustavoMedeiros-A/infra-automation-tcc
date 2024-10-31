@@ -9,6 +9,8 @@
         name: mongo
         tag: "latest"
         source: pull
+      environment:
+        DOCKER_HOST: "unix:///var/run/docker.sock"
 
     - name: Cria o diretório para dados persistentes do MongoDB
       file:

@@ -5,10 +5,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "console": "npx ts-node src/index.ts",
-    "createTable": "npx ts-node src/postgres/createTables.ts",
-    "insertDataPostgres": "npx ts-node src/postgres/insertDataPostgres",
-    "createCollection": "npx ts-node src/mongo/createCollection.ts",
-    "insertDataMongo": "npx ts-node src/mongo/insertDataMongo"
+    "createTable": "npx ts-node src/postgres/setup/createTables.ts",
+    "insertDataPostgres": "npx ts-node src/postgres/setup/insertDataPostgres",
+    "getAllDataPostgres": "npx ts-node src/postgres/queries/getAllData.ts",
+    "createCollection": "npx ts-node src/mongo/setup/createCollection.ts",
+    "insertDataMongo": "npx ts-node src/mongo/setup/insertDataMongo"
   },
   "keywords": [],
   "author": "",

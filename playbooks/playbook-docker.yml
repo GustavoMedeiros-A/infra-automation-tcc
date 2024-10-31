@@ -6,9 +6,19 @@
       apt:
         update_cache: yes
 
-    - name: Ensure pip3 is installed
+    - name: Instala o pip3
       apt:
         name: python3-pip
+        state: present
+
+    - name: Corrige a versão do requests
+      pip:
+        name: requests==2.31.0
+        state: present
+
+    - name: Instala a biblioteca Docker para Python
+      pip:
+        name: docker
         state: present
 
     - name: Instala o Docker
@@ -44,3 +54,7 @@
         name: docker
         state: restarted
         enabled: true
+
+    - name: Aguarda para garantir permissões aplicadas
+      pause:
+        seconds: 10

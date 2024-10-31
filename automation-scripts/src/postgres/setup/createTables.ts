@@ -1,4 +1,4 @@
-import { client } from "./postgresConnection";
+import { client } from "../connection/postgresConnection";
 
 const createTables = async () => {
   try {

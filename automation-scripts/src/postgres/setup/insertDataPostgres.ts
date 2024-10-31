@@ -3,8 +3,8 @@ import {
   getRandomQuantity,
   ORDER_COUNT,
   PRODUTO_COUNT,
-} from "../utils";
-import { client } from "./mongoConnection";
+} from "../../utils";
+import { client } from "../connection/postgresConnection";
 
 const generateData = async () => {
   try {
@@ -13,14 +13,14 @@ const generateData = async () => {
 
     console.log("Data generated successfully");
   } catch (err) {
-    console.error("Error generating data:", err);
+    console.error("Error to generate:", err);
   }
 };
 
-const clearCollections = async () => {
-  await client.db().collection("products").deleteMany({});
-  await client.db().collection("orders").deleteMany({});
-  await client.db().collection("order_items").deleteMany({});
+const truncateTables = async () => {
+  await client.query(
+    'TRUNCATE TABLE product, "order", order_items RESTART IDENTITY CASCADE'
+  );
 };
 
 const generateProducts = async () => {
@@ -31,12 +31,12 @@ const generateProducts = async () => {
     const name = `Product ${i + 1}`;
     const price = Math.floor(Math.random() * 1000) + 1;
 
-    const result = await client
-      .db()
-      .collection("products")
-      .insertOne({ name, price });
+    const result = await client.query(
+      `INSERT INTO product (name, price) VALUES ($1, $2) RETURNING id`,
+      [name, price]
+    );
 
-    const productId = result.insertedId;
+    const productId = result.rows[0].id;
     products.push({ id: productId, name, price });
   }
 
@@ -49,34 +49,38 @@ const generateOrders = async (products: any[]) => {
   for (let i = 0; i < orderCount; i++) {
     const clientName = `Client ${i + 1}`;
     const orderDate = get2024RandomDate();
-    const items = [];
 
+    const orderResult = await client.query(
+      `INSERT INTO "order" (client, date) VALUES ($1, $2) RETURNING id`,
+      [clientName, orderDate]
+    );
+
+    const orderId = orderResult.rows[0].id;
+
+    //Quantidade aletória de items
     const itemCount = Math.floor(Math.random() * 10) + 1;
     for (let j = 0; j < itemCount; j++) {
       const product = products[Math.floor(Math.random() * products.length)];
       const quantity = getRandomQuantity();
-      items.push({ product_id: product.id, quantity });
-    }
 
-    await client.db().collection("orders").insertOne({
-      client: clientName,
-      date: orderDate,
-      items,
-    });
+      await client.query(
+        `INSERT INTO order_items (product_id, order_id, quantity) VALUES ($1, $2, $3)`,
+        [product.id, orderId, quantity]
+      );
+    }
   }
 };
 
 const insert = async () => {
   try {
     await client.connect();
-    await clearCollections();
+    await truncateTables();
 
-    await generateData(); // Gera a quantidade fixa de dados
+    await generateData();
   } catch (err) {
-    console.log("Error connecting to MongoDB:", err);
+    console.log("error", err);
   } finally {
-    await client.close();
-    console.log("MongoDB connection closed.");
+    await client.end();
   }
 };
 
