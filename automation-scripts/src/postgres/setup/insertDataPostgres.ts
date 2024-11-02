@@ -51,23 +51,30 @@ const generateOrders = async (products: any[]) => {
     const orderDate = get2024RandomDate();
 
     const orderResult = await client.query(
-      `INSERT INTO "order" (client, date) VALUES ($1, $2) RETURNING id`,
+      `INSERT INTO "order" (client, date, total) VALUES ($1, $2, 0) RETURNING id`,
       [clientName, orderDate]
     );
 
     const orderId = orderResult.rows[0].id;
+    let totalValue = 0;
 
-    //Quantidade aletória de items
     const itemCount = Math.floor(Math.random() * 10) + 1;
     for (let j = 0; j < itemCount; j++) {
       const product = products[Math.floor(Math.random() * products.length)];
       const quantity = getRandomQuantity();
+      const itemTotal = product.price * quantity;
+      totalValue += itemTotal;
 
       await client.query(
         `INSERT INTO order_items (product_id, order_id, quantity) VALUES ($1, $2, $3)`,
         [product.id, orderId, quantity]
       );
     }
+
+    await client.query(`UPDATE "order" SET total = $1 WHERE id = $2`, [
+      totalValue,
+      orderId,
+    ]);
   }
 };
 

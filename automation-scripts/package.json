@@ -8,6 +8,11 @@
     "createTable": "npx ts-node src/postgres/setup/createTables.ts",
     "insertDataPostgres": "npx ts-node src/postgres/setup/insertDataPostgres",
     "getAllDataPostgres": "npx ts-node src/postgres/queries/getAllData.ts",
+    "getDataFilterPostgres": "npx ts-node src/postgres/queries/getDataFilter.ts",
+    "getAllOrderProductsPostgres": "npx ts-node src/postgres/queries/getAllOrderProducts.ts",
+    "getOrdersByTotalValueDescPostgres": "npx ts-node src/postgres/queries/getOrdersByTotalValueDesc.ts",
+    "getProductCountByOrderPostgres": "npx ts-node src/postgres/queries/getProductCountByOrder.ts",
+    "complexQueryPostgres": "npx ts-node src/postgres/queries/complexQuery.ts",
     "createCollection": "npx ts-node src/mongo/setup/createCollection.ts",
     "insertDataMongo": "npx ts-node src/mongo/setup/insertDataMongo"
   },
@@ -17,16 +22,21 @@
   "description": "",
   "dependencies": {
     "@types/node": "^22.7.5",
+    "child_process": "^1.0.2",
     "dotenv": "^16.4.5",
+    "install": "^0.13.0",
     "mongodb": "^6.9.0",
+    "npm": "^10.9.0",
     "os-utils": "^0.0.14",
     "pg": "^8.13.0",
+    "pidusage": "^3.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
   "devDependencies": {
     "@types/mongodb": "^4.0.6",
     "@types/os-utils": "^0.0.4",
-    "@types/pg": "^8.11.10"
+    "@types/pg": "^8.11.10",
+    "@types/pidusage": "^2.0.5"
   }
 }

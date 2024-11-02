@@ -15,6 +15,7 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS "order" (
         id SERIAL PRIMARY KEY,
         client VARCHAR(255) NOT NULL,
+        total DECIMAL(10, 2) NOT NULL,
         date TIMESTAMP NOT NULL
       )`;
 

@@ -31,6 +31,7 @@ export default async function executeAndMeasure(
 
   const totalMemory = os.totalmem();
   const memoryUsed = ((endMemory - startMemory) / totalMemory) * 100;
+  const memoryUsedKB = memoryDifference / 1024;
 
   const results = {
     executionTime,
@@ -46,20 +47,15 @@ export default async function executeAndMeasure(
     fs.mkdirSync(directoryPath);
   }
 
-  const filePath = `./results/${outputPath}`;
-  if (!fs.existsSync(filePath)) {
-    fs.mkdirSync(filePath);
-  }
+  // Define o caminho completo do arquivo com a extensão .json
+  const filePath = `./results/${outputPath}.json`;
 
-  fs.writeFile(
-    `./results/${outputPath}`,
-    JSON.stringify(results, null, 2),
-    (err) => {
-      if (err) {
-        console.error("Erro ao salvar resultados:", err);
-      } else {
-        console.log(`Resultados salvos em ${outputPath}`);
-      }
+  // Grava o arquivo de resultados no caminho especificado
+  fs.writeFile(filePath, JSON.stringify(results, null, 2), (err) => {
+    if (err) {
+      console.error("Erro ao salvar resultados:", err);
+    } else {
+      console.log(`Resultados salvos em ${filePath}`);
     }
-  );
+  });
 }
