@@ -1,8 +1,6 @@
 {
-  "executionTime": 2,
-  "totalCpuUsageMs": 1176.519,
-  "totalCpuUsageSeconds": 1.176519,
-  "cpuUsagePercent": "3676.62",
-  "totalMemoryUsage": 1215296,
-  "memoryUsagePercent": "0.00"
+  "executionTime": 2.919574,
+  "cpuUsed": 7.683055815677219,
+  "memoryUsed": 0.0007832273175329189,
+  "memoryUsedMB": 0.375
 }

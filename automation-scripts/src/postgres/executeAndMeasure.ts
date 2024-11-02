@@ -1,14 +1,7 @@
-import * as os from "os";
 import * as fs from "fs";
-import {
-  calculateCpuPercent,
-  calculateTotalCpuUsage,
-  calculateTotalCpuUsageMs,
-  calculateTotalCpuUsageSeconds,
-  calculateTotalMemoryUsage,
-  calculateTotalMemoryUsagepercent,
-} from "../utils";
+import * as os from "os";
 import { client } from "./connection/postgresConnection";
+import { calculateCpu } from "../utils";
 
 export default async function executeAndMeasure(
   query: string,
@@ -16,9 +9,9 @@ export default async function executeAndMeasure(
 ) {
   await client.connect();
 
-  const startCpuUsage = process.cpuUsage();
-  const startMemoryUsage = process.memoryUsage();
-  const startTime = Date.now();
+  const startTime = process.hrtime();
+  const startCpu = process.cpuUsage();
+  const startMemory = process.memoryUsage().rss;
 
   try {
     await client.query(query);
@@ -26,41 +19,24 @@ export default async function executeAndMeasure(
     console.error("Erro ao executar a query:", error);
     return;
   }
+  const endTime = process.hrtime(startTime);
+  const endCpu = process.cpuUsage(startCpu);
+  const endMemory = process.memoryUsage().rss;
 
-  const endTime = Date.now();
-  const executionTime = endTime - startTime;
-  const endCpuUsage = process.cpuUsage(startCpuUsage);
-  const endMemoryUsage = process.memoryUsage();
+  const memoryDifference = endMemory - startMemory;
+  const memoryUsedMB = memoryDifference / (1024 * 1024);
 
-  const totalCpuUsage = calculateTotalCpuUsage(
-    endCpuUsage.user,
-    endCpuUsage.system,
-    startCpuUsage.user,
-    startCpuUsage.system
-  );
-  const cpuUsagePercent = calculateCpuPercent(totalCpuUsage, executionTime);
-  const totalCpuUsageMs = calculateTotalCpuUsageMs(totalCpuUsage);
-  const totalCpuUsageSeconds = calculateTotalCpuUsageSeconds(totalCpuUsage);
+  const executionTime = endTime[0] * 1000 + endTime[1] / 1e6;
+  const cpuUsed = calculateCpu(endCpu, executionTime);
 
-  const totalSystemMemory = os.totalmem();
-  const freeSystemMemory = os.freemem();
-
-  const totalMemoryUsage = calculateTotalMemoryUsage(
-    endMemoryUsage.heapUsed,
-    startMemoryUsage.heapUsed
-  );
-  const memoryUsagePercent = calculateTotalMemoryUsagepercent(
-    totalMemoryUsage,
-    totalSystemMemory
-  );
+  const totalMemory = os.totalmem();
+  const memoryUsed = ((endMemory - startMemory) / totalMemory) * 100;
 
   const results = {
     executionTime,
-    totalCpuUsageMs,
-    totalCpuUsageSeconds,
-    cpuUsagePercent: cpuUsagePercent.toFixed(2),
-    totalMemoryUsage,
-    memoryUsagePercent: memoryUsagePercent.toFixed(2),
+    cpuUsed,
+    memoryUsed,
+    memoryUsedMB,
   };
 
   console.log("Resultados da Medição:", results);
@@ -68,6 +44,11 @@ export default async function executeAndMeasure(
   const directoryPath = "./results";
   if (!fs.existsSync(directoryPath)) {
     fs.mkdirSync(directoryPath);
+  }
+
+  const filePath = `./results/${outputPath}`;
+  if (!fs.existsSync(filePath)) {
+    fs.mkdirSync(filePath);
   }
 
   fs.writeFile(
