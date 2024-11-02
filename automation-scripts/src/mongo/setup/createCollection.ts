@@ -1,4 +1,4 @@
-import { client } from "./mongoConnection";
+import { client } from "../connection/mongoConnection";
 
 const dbName = "tcc";
 
@@ -9,11 +9,9 @@ const createCollections = async () => {
 
     const productCollection = "product";
     const orderCollection = "order";
-    const orderItemsCollection = "order_items";
 
     await db.createCollection(productCollection);
     await db.createCollection(orderCollection);
-    await db.createCollection(orderItemsCollection);
 
     console.log("Collections created successfully.");
   } catch (e) {

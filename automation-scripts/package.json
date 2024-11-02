@@ -14,7 +14,14 @@
     "getProductCountByOrderPostgres": "npx ts-node src/postgres/queries/getProductCountByOrder.ts",
     "complexQueryPostgres": "npx ts-node src/postgres/queries/complexQuery.ts",
     "createCollection": "npx ts-node src/mongo/setup/createCollection.ts",
-    "insertDataMongo": "npx ts-node src/mongo/setup/insertDataMongo"
+    "insertDataMongo": "npx ts-node src/mongo/setup/insertDataMongo",
+    "createIndexesMongo": "npx ts-node src/mongo/setup/createIndex",
+    "getAllDataMongo": "npx ts-node src/mongo/queries/getAllDataMongo.ts",
+    "getDataFilterMongo": "npx ts-node src/mongo/queries/getDataFilterMongo.ts",
+    "getAllOrderProductsMongo": "npx ts-node src/mongo/queries/getAllOrderProductsMongo.ts",
+    "getOrdersByTotalValueDescMongo": "npx ts-node src/mongo/queries/getOrdersByTotalValueDescMongo.ts",
+    "getProductCountByOrderMongo": "npx ts-node src/mongo/queries/getProductCountByOrderMongo.ts",
+    "complexQueryMongo": "npx ts-node src/mongo/queries/complexQueryMongo.ts"
   },
   "keywords": [],
   "author": "",

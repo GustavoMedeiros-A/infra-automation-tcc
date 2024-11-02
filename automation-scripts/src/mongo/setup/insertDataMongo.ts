@@ -6,6 +6,8 @@ import {
 } from "../../utils";
 import { client } from "../connection/mongoConnection";
 
+let dbName = "tcc";
+
 const generateData = async () => {
   try {
     const products = await generateProducts();
@@ -18,9 +20,8 @@ const generateData = async () => {
 };
 
 const clearCollections = async () => {
-  await client.db().collection("products").deleteMany({});
-  await client.db().collection("orders").deleteMany({});
-  await client.db().collection("order_items").deleteMany({});
+  await client.db(dbName).collection("products").deleteMany({});
+  await client.db(dbName).collection("orders").deleteMany({});
 };
 
 const generateProducts = async () => {
@@ -32,7 +33,7 @@ const generateProducts = async () => {
     const price = Math.floor(Math.random() * 1000) + 1;
 
     const result = await client
-      .db()
+      .db(dbName)
       .collection("products")
       .insertOne({ name, price });
 
@@ -50,18 +51,23 @@ const generateOrders = async (products: any[]) => {
     const clientName = `Client ${i + 1}`;
     const orderDate = get2024RandomDate();
     const items = [];
+    let totalValue = 0;
 
     const itemCount = Math.floor(Math.random() * 10) + 1;
     for (let j = 0; j < itemCount; j++) {
       const product = products[Math.floor(Math.random() * products.length)];
       const quantity = getRandomQuantity();
+      const itemTotal = product.price * quantity;
+      totalValue += itemTotal;
+
       items.push({ product_id: product.id, quantity });
     }
 
-    await client.db().collection("orders").insertOne({
+    await client.db(dbName).collection("orders").insertOne({
       client: clientName,
       date: orderDate,
       items,
+      total: totalValue,
     });
   }
 };
@@ -71,7 +77,7 @@ const insert = async () => {
     await client.connect();
     await clearCollections();
 
-    await generateData(); // Gera a quantidade fixa de dados
+    await generateData();
   } catch (err) {
     console.log("Error connecting to MongoDB:", err);
   } finally {
