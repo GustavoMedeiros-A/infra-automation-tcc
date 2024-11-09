@@ -1,4 +1,4 @@
-import executeAndMeasure from "../executeAndMeasure";
+import executeAndMeasure from "../src/postgres/executeAndMeasure";
 
 const outputPath = "getProductCountByOrder";
 const query = `

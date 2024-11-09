@@ -5,8 +5,8 @@ interface CpuUsage {
   system: number;
 }
 
-export const PRODUTO_COUNT = 100;
-export const ORDER_COUNT = 10000;
+export const PRODUTO_COUNT = 1000;
+export const ORDER_COUNT = 1000;
 
 export function get2024RandomDate(): Date {
   const start = new Date(2024, 0, 1);

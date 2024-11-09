@@ -109,5 +109,5 @@
   },
   "include": [
     "src/**/*.ts"
-, "src/mongo/createCollections,ts"  ]
+, "src/mongo/createCollections,ts", "oldQueries/getProductCountByOrder.ts", "oldQueries/getOrdersByTotalValueDesc.ts", "oldQueries/getDataFilter.ts"  ]
 }
