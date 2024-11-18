@@ -1,4 +1,3 @@
----
 - hosts: all
   become: true
   tasks:
@@ -9,44 +8,47 @@
 
     - name: Add Node.js 16.x repository
       apt_repository:
-        repo: deb https://deb.nodesource.com/node_16.x bionic main
+        repo: deb https://deb.nodesource.com/node_16.x focal main # substitua "focal" pela versão correta, se necessário
         state: present
 
     - name: Update apt cache after adding Node.js repo
       apt:
         update_cache: yes
 
-    - name: Install Node.js (16.x version)
+    - name: Install Node.js (16.x version) and npm
       apt:
-        name: nodejs
+        name:
+          - nodejs
+          - npm
         state: present
 
     - name: Criar pasta para scripts
       file:
-        path: /home/vagrant/scripts
+        path: /home/ubuntu/scripts
         state: directory
-        owner: vagrant
+        owner: ubuntu
         mode: "0755"
 
     - name: Copy scripts to VM (excluding node_modules)
       copy:
         src: ../automation-scripts/
-        dest: /home/vagrant/scripts
-        owner: vagrant
+        dest: /home/ubuntu/scripts
+        owner: ubuntu
         mode: "0755"
 
     - name: Remove .env file on target VM
       file:
-        path: /home/vagrant/scripts/.env
+        path: /home/ubuntu/scripts/.env
         state: absent
 
     - name: Install dependencies
       npm:
-        path: /home/vagrant/scripts
+        path: /home/ubuntu/scripts
         state: present
+
     - name: Create .env file for database configuration
       copy:
-        dest: /home/vagrant/scripts/.env
+        dest: /home/ubuntu/scripts/.env
         content: |
           DB_USER=admin
           DB_HOST=localhost
@@ -54,5 +56,5 @@
           DB_PASSWORD=postgres
           DB_PORT=5432
           MONGO_URL=mongodb://admin:password@localhost:27017
-        owner: vagrant
+        owner: ubuntu
         mode: "0600"
