@@ -1,7 +1,7 @@
-import executeAndMeasure from "../executeAndMeasure";
+import { runMultipleExecution } from "../../utils";
 
 const outputPath = "getAllData";
 const query = 'SELECT * from "order"';
+const filePath = `./results/${outputPath}.json`
 
-console.log("execute");
-executeAndMeasure(query, outputPath);
+runMultipleExecution(query, filePath);

@@ -1,0 +1,13 @@
+Exemplo:
+- Tempo total: 200ms
+- CPU User: 100ms  
+- CPU System: 50ms 
+- Nucleo: 1
+Resultado: ((100+50) / 200) / 1 * 100 = 75% de uso.
+
+
+
+Memória total: 8 GB  
+Memória usada pela query: 512 MB  
+Percentual: (512 / 8192) * 100 = ~6.25%
+

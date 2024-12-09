@@ -14,7 +14,7 @@
     "insertDataMongo": "npx ts-node src/mongo/setup/insertDataMongo",
     "createIndexesMongo": "npx ts-node src/mongo/setup/createIndex",
     "getAllDataMongo": "npx ts-node src/mongo/queries/getAllDataMongo.ts",
-    "getOrdersByTotalValueDescMongo": "npx ts-node src/mongo/queries/getOrdersByTotalValueDescMongo.ts",
+    "getAllOrderProductsMongo": "npx ts-node src/mongo/queries/getAllOrderProductsMongo.ts",
     "complexQueryMongo": "npx ts-node src/mongo/queries/complexQueryMongo.ts"
   },
   "keywords": [],

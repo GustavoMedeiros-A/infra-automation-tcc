@@ -1,6 +1,6 @@
-import executeAndMeasure from "../executeAndMeasure";
 
-const outputPath = "complexQuery";
+import { runMultipleExecution } from "../../utils";
+
 const query = `
   SELECT 
     o.id AS order_id,
@@ -22,5 +22,8 @@ const query = `
     total_value DESC, total_products DESC;
 `;
 
-console.log("execute");
-executeAndMeasure(query, outputPath);
+
+const outputPath = "complexQuery";
+const filePath = `./results/${outputPath}.json`
+
+runMultipleExecution(query, filePath);

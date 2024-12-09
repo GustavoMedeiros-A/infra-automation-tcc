@@ -1,15 +1,21 @@
+import { runMultipleExecution, runMultipleExecutionMongo } from "../../utils";
 import executeAndMeasureMongo from "../executeAndMeasureMongo";
 
 const query = [
   {
+    $unwind: "$items", 
+  },
+  {
     $lookup: {
       from: "products",
-      localField: "items",
+      localField: "items.product_id",
       foreignField: "_id",
       as: "product_details",
     },
   },
-  { $unwind: "$product_details" },
+  {
+    $unwind: "$product_details", 
+  },
   {
     $group: {
       _id: "$_id",
@@ -19,7 +25,7 @@ const query = [
       total_value: {
         $sum: { $multiply: ["$product_details.price", "$items.quantity"] },
       },
-      total_products: { $sum: 1 },
+      total_products: { $sum: "$items.quantity" }, 
     },
   },
   {
@@ -34,5 +40,6 @@ const query = [
 ];
 
 const outputPath = "complexQueryMongo";
-console.log("execute");
-executeAndMeasureMongo(query, outputPath);
+const filePath = `./results/${outputPath}.json`
+
+runMultipleExecutionMongo(query, filePath);

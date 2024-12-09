@@ -1,3 +1,4 @@
+import { runMultipleExecution } from "../../utils";
 import executeAndMeasure from "../executeAndMeasure";
 
 const outputPath = "getAllOrderProducts";
@@ -8,5 +9,6 @@ const query = `
   JOIN product AS p ON oi.product_id = p.id;
 `;
 
-console.log("execute");
-executeAndMeasure(query, outputPath);
+const filePath = `./results/${outputPath}.json`
+
+runMultipleExecution(query, filePath);
