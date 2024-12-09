@@ -53,7 +53,7 @@ export async function runMultipleExecution(query: string, outputFileName: string
 
     if (i < 10) {
       console.log(`Aguardando 2 segundos antes da próxima execução...`);
-      await delay(2000);
+      await delay(15000);
     }
   }
 

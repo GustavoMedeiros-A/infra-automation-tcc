@@ -7,6 +7,9 @@ export default async function executeAndMeasure(
   query: string,
 ) {
   
+  if(global.gc) {
+    global.gc()
+  }
 
   const startTime = process.hrtime();
   const startCpu = process.cpuUsage();

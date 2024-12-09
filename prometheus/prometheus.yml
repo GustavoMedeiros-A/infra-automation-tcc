@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 2s
+  evaluation_interval: 2s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node_exporter_ec2'
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['54.224.234.9:9100']
