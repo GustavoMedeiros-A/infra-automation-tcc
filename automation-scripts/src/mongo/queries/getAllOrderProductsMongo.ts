@@ -41,6 +41,6 @@ const query = [
   },
 ];
 
-const filePath = `./results/getAllOrderProductsMongo.json`
+const filePath = `./resultsMongo/getAllOrderProductsMongo.json`
 
 runMultipleExecutionMongo(query, filePath);

@@ -40,6 +40,6 @@ const query = [
 ];
 
 const outputPath = "complexQueryMongo";
-const filePath = `./results/${outputPath}.json`
+const filePath = `./resultsMongo/${outputPath}.json`
 
 runMultipleExecutionMongo(query, filePath);

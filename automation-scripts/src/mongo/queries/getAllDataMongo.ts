@@ -6,6 +6,6 @@ const query = [{ $match: {} }];
 client.db().collection("orders").aggregate(query);
 
 
-const filePath = `./results/getAllDataMongo.json`
+const filePath = `./resultsMongo/getAllDataMongo.json`
 
 runMultipleExecutionMongo(query, filePath);

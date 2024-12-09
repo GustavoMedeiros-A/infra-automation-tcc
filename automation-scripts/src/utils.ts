@@ -56,9 +56,8 @@ export async function runMultipleExecution(query: string, outputFileName: string
       await delay(2000);
     }
   }
-  const formatFileName = `${outputFileName}_${ORDER_COUNT}`
 
-  fs.writeFile(formatFileName, JSON.stringify(allResults, null, 2), (err) => {
+  fs.writeFile(outputFileName, JSON.stringify(allResults, null, 2), (err) => {
     if (err) {
       console.error("Erro ao salvar resultados:", err);
     } else {
@@ -88,9 +87,8 @@ export async function runMultipleExecutionMongo(query: any, outputFileName: stri
       await delay(2000);
     }
   }
-  const formatFileName = `${outputFileName}_${ORDER_COUNT}`
 
-  fs.writeFile(formatFileName, JSON.stringify(allResults, null, 2), (err) => {
+  fs.writeFile(outputFileName, JSON.stringify(allResults, null, 2), (err) => {
     if (err) {
       console.error("Erro ao salvar resultados:", err);
     } else {

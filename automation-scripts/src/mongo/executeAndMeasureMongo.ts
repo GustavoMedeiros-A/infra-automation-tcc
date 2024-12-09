@@ -36,13 +36,13 @@ export default async function executeAndMeasureMongo(
     cpuUsed,
     memoryUsed,
   };
+  
+    const directoryPath = "./resultsMongo";
+    if (!fs.existsSync(directoryPath)) {
+      fs.mkdirSync(directoryPath);
+    }
 
-  console.log("Resultados da Medição:", results);
-
-  const directoryPath = "./resultsMongo";
-  if (!fs.existsSync(directoryPath)) {
-    fs.mkdirSync(directoryPath);
-  }
+  return results;
 
   // // Define o caminho completo do arquivo com a extensão .json
   // const filePath = `./resultsMongo/${outputPath}.json`;
